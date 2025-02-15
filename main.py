@@ -14,7 +14,7 @@ app.include_router(users_db.router)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-@app.get("/url", tags=["root"])
+@app.get("/", tags=["root"])
 async def url():
     return {"message": "API is running on Railway!"}
 
