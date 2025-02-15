@@ -12,7 +12,7 @@ def search_user(key: str, value) -> Optional[User]:
     :param value: Valor que se desea buscar en la base de datos.
     :return: Una instancia de User si el usuario existe, de lo contrario None.
     """
-    user = db_client.local.users.find_one({key: value})
+    user = db_client.users.find_one({key: value})
 
     if not user:
         return None

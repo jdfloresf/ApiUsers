@@ -28,8 +28,8 @@ async def users(id: Optional[str] = None):
     """
     
     if id:
-        return [search_user("_id", ObjectId(id)) ]   
-    return users_schema(db_client.local.users.find())
+        return [search_user("_id", ObjectId(id))]   
+    return users_schema(db_client.users.find())
 
 
 # Path
@@ -62,10 +62,10 @@ async def create_user(user: User):
     del user_dict["id"] # Se elimina el ID para que MongoDB lo genere automáticamente
 
     # Inserta el usuario y obtiene su ID
-    id = db_client.local.users.insert_one(user_dict).inserted_id
+    id = db_client.users.insert_one(user_dict).inserted_id
 
     # Obtiene el usuario insertado
-    new_user = user_schema(db_client.local.users.find_one({"_id":id}))
+    new_user = user_schema(db_client.users.find_one({"_id":id}))
 
     return User(**new_user) # Devuelve el usuario en formato Pydantic
 
@@ -82,7 +82,7 @@ async def update_user(user: User):
     del user_dict["id"]
     
     try:
-        db_client.local.users.find_one_and_replace(
+        db_client.users.find_one_and_replace(
             {"_id": ObjectId(user.id)}, user_dict)
     except:
         return HTTPException(
@@ -101,7 +101,7 @@ async def delete_user(id: str):
     - Si el usuario no existe, retorna un error indicando que no se encontró.
     """
 
-    found = db_client.local.users.find_one_and_delete({"_id": ObjectId(id)})
+    found = db_client.users.find_one_and_delete({"_id": ObjectId(id)})
 
     if not found:
         return {"error": "User not found"}
